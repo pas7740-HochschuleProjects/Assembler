@@ -1,5 +1,4 @@
 .text
-	
 	# Printing out the text
     	li $v0, 4
     	la $a0, text
@@ -28,7 +27,8 @@
 	# Save
 	sw $t2, addr_product	# Save product
 	sw $t3, addr_sum	# Save sum
+	
 .data
-text: .asciiz "Enter a number: "
-addr_product: .word 0
-addr_sum: .word 0
+	text: .asciiz "Enter a number: "
+	addr_product: .word 0
+	addr_sum: .word 0
