@@ -6,7 +6,7 @@
 	unitHeight: .word 16
 
 .text
-	# x-Position in $a0, y-Position in $a1, Colour-Code in $a2
+	# x-Position in $a0, y-Position in $a1, Colour-Code in $a2, void
 	.globl Draw
 	Draw:
 		addi $sp, $sp, -4
@@ -21,7 +21,8 @@
     		lw $ra, 0($sp)
     		addi $sp, $sp, 4
     		jr $ra
-    		
+    	
+    	# x-Position in $a0, y-Position in $a1, return offset in $v0
     	GetOffset:
     		# Calculate Offset
 		lw $t0, displayWidth
@@ -35,3 +36,28 @@
 		add $v0, $v0, $a0
 		
     		jr $ra
+    		
+    	# x-Position in $a0, y-Position in $a1
+    	.globl OutOfBounds
+    	OutOfBounds:
+    		lw $t0, displayWidth
+		lw $t1, unitWidth
+		div $t0, $t0, $t1
+		add $t0, $t0, -1
+		lw $t2, displayHeight
+		lw $t3, unitHeight
+		div $t2, $t2, $t3
+		add $t2, $t2, -1
+		
+    		beq $a0, -1, True
+    		beq $a1, -1, True
+    		beq $a0, $t0, True
+    		beq $a1, $t2, True
+    		
+    		# Else False
+    		False:
+    			li $v0, 0
+    			jr $ra
+    		True:
+    			li $v0, 1
+    			jr $ra

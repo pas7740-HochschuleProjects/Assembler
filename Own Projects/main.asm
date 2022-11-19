@@ -3,6 +3,7 @@
 # $s1: World
 # $s2: Worm [(x,y)]
 # $s3: HeadIndex
+# $s4: Current Key
 
 .data
 	redColor: .word 0xff0000
@@ -10,6 +11,7 @@
 	greenColor: .word 0x00ff00
 	yellowColor: .word 0xffff00
 	worm: .space 256
+	wormSize: .word 256
 	world: .space 16384
 	worldSize: .word 16384
 	headIndex: .space 8
@@ -20,9 +22,9 @@
 		#jal SetWorld
 		jal SetWorm
 		li $s0, 1
+		li $s4, -1
 		jal ShowWorm
 		jal GameLoop
-		
 		jal Exit
         
         Exit:
@@ -31,13 +33,11 @@
              	syscall
              	
         GameLoop:
-        	#bgt $s0, 0, Exit
-        	lw $t0, 0($s3)
-        	bgt $t0, 31, Exit
+        	jal ReadInput
+        	li $a0, 100
+        	jal Sleep
         	jal MoveWorm
         	jal ShowWorm
-        	li $a0, 200
-        	jal Sleep
 		j GameLoop
 		
 	SetWorm:
@@ -79,8 +79,47 @@
 		jr $ra
 		
 	MoveWorm:
+		addi $sp, $sp, -4
+		sw $ra, 0($sp)
+		
 		# Add one at the x-Axis
 		lw $t0, 0($s3)
-		addi $t0, $t0, 1
-		sw $t0, 0($s3)
+		lw $t1, 4($s3)
+		
+		beq $s4, 0, MoveRight
+		beq $s4, 97, MoveLeft
+		beq $s4, 100, MoveRight
+		beq $s4, 115, MoveDown
+		beq $s4, 119, MoveUp
+		MoveLeft:
+			addi $t0, $t0, -1
+			j EndMoveWorm
+		MoveRight:
+			addi $t0, $t0, 1
+			j EndMoveWorm
+		MoveDown:
+			addi $t1, $t1, 1
+			j EndMoveWorm
+		MoveUp:
+			addi $t1, $t1, -1
+			j EndMoveWorm
+		EndMoveWorm:
+			# If worm out of bounds
+			lw $a0, 0($s3)
+			lw $a1, 4($s3)
+			jal CallerSave
+			jal OutOfBounds
+			beq $v0, 1, Exit
+			jal CallerRestore
+			
+			sw $t0, 0($s3)
+			sw $t1, 4($s3)
+			
+			lw $ra, 0($sp)
+    			addi $sp, $sp, 4
+			jr $ra
+		
+	ReadInput:
+		lui $t1, 0xffff
+		lw $s4, 4($t1)
 		jr $ra
