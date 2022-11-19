@@ -74,3 +74,10 @@
 		
 		addi $sp, $sp, 32
 		jr $ra
+		
+	# Time in milliseconds in $a0
+	.globl Sleep
+	Sleep:
+		li $v0, 32
+		syscall
+		jr $ra
