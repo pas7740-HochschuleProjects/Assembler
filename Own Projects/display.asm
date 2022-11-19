@@ -40,16 +40,19 @@
     		lw $t0, displayWidth
 		lw $t1, unitWidth
 		div $t0, $t0, $t1
-		add $t0, $t0, -1
 		lw $t2, displayHeight
 		lw $t3, unitHeight
 		div $t2, $t2, $t3
-		add $t2, $t2, -1
 		
-    		beq $a0, -1, True
-    		beq $a1, -1, True
-    		beq $a0, $t0, True
-    		beq $a1, $t2, True
+		slti $t1, $a0, 0
+		slti $t3, $a1, 0
+    		bne $t1, 0, True
+    		bne $t3, 0, True
+    		
+    		slt $t1, $a0, $t0
+    		slt $t3, $a1, $t2
+    		bne $t1, 1, True
+    		bne $t3, 1, True
     		
     		# Else False
     		False:
