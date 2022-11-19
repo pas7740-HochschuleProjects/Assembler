@@ -5,40 +5,43 @@
 # $s3: HeadIndex
 # $s4: Current Key
 
+# Enum Definitions
+
+
+.include "io.asm"
+.include "basicOperations.asm"
+
 .data
 	redColor: .word 0xff0000
 	blueColor: .word 0x0000ff
 	greenColor: .word 0x00ff00
 	yellowColor: .word 0xffff00
+	
 	worm: .space 256
 	wormSize: .word 256
 	world: .space 16384
 	worldSize: .word 16384
+	
 	headIndex: .space 8
 .text
-	.globl main
-	main:
+	Main:
 		# Game
 		#jal SetWorld
 		jal SetWorm
 		li $s0, 1
-		li $s4, -1
+		li $s4, 0
 		jal ShowWorm
 		jal GameLoop
-		jal Exit
-        
-        Exit:
-        	# End Program
-		li $v0, 10
-             	syscall
              	
         GameLoop:
+        	beq $s0, 0, EndGameLoop
         	jal ReadInput
-        	li $a0, 100
-        	jal Sleep
+        	Sleep(100)
         	jal MoveWorm
         	jal ShowWorm
 		j GameLoop
+		EndGameLoop:
+			Exit
 		
 	SetWorm:
 		# Worm First Pos
@@ -107,10 +110,10 @@
 			# If worm out of bounds
 			lw $a0, 0($s3)
 			lw $a1, 4($s3)
-			jal CallerSave
+			CallerSave
 			jal OutOfBounds
-			beq $v0, 1, Exit
-			jal CallerRestore
+			beq $v0, 1, EndRunning
+			CallerRestore
 			
 			sw $t0, 0($s3)
 			sw $t1, 4($s3)
@@ -123,3 +126,9 @@
 		lui $t1, 0xffff
 		lw $s4, 4($t1)
 		jr $ra
+		
+	EndRunning:
+		li $s0, 0
+		jr $ra
+		
+.include "display.asm"

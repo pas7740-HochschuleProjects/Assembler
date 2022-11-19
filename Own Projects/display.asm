@@ -4,10 +4,8 @@
 	displayHeight: .word 512
 	unitWidth: .word 16
 	unitHeight: .word 16
-
 .text
 	# x-Position in $a0, y-Position in $a1, Colour-Code in $a2, void
-	.globl Draw
 	Draw:
 		addi $sp, $sp, -4
 		sw $ra, 0($sp)
@@ -38,7 +36,6 @@
     		jr $ra
     		
     	# x-Position in $a0, y-Position in $a1
-    	.globl OutOfBounds
     	OutOfBounds:
     		lw $t0, displayWidth
 		lw $t1, unitWidth

@@ -1,8 +1,20 @@
 .data
 
 .text
-	.globl CallerSave
-	CallerSave:
+	# Exit Program
+	.macro Exit
+		li $v0, 10
+             	syscall
+        .end_macro
+
+	# Parameter Time in milliseconds
+	.macro Sleep (%time)
+		li $a0, %time
+		li $v0, 32
+		syscall
+	.end_macro
+		
+	.macro CallerSave
 		addi $sp, $sp, -64
 		
 		sw $v0, 60($sp)
@@ -21,11 +33,9 @@
 		sw $t7, 8($sp)
 		sw $t8, 4($sp)
 		sw $t9, 0($sp)
+	.end_macro
 		
-		jr $ra
-		
-	.globl CallerRestore
-	CallerRestore:
+	.macro CallerRestore
 		lw $v0, 60($sp)
 		lw $v1, 56($sp)
 		lw $a0, 52($sp)
@@ -44,10 +54,9 @@
 		lw $t9, 0($sp)
 		
 		addi $sp, $sp, 64
-		jr $ra
+	.end_macro
 		
-	.globl CalleeSave
-	CalleeSave:
+	.macro CalleeSave
 		addi $sp, $sp, -32
 		
 		sw $s0, 28($sp)
@@ -58,11 +67,9 @@
 		sw $s5, 8($sp)
 		sw $s6, 4($sp)
 		sw $s7, 0($sp)
-		
-		jr $ra
+	.end_macro
 	
-	.globl CalleeRestore
-	CalleeRestore:
+	.macro CalleeRestore
 		lw $s0, 28($sp)
 		lw $s1, 24($sp)
 		lw $s2, 20($sp)
@@ -73,11 +80,4 @@
 		lw $s7, 0($sp)
 		
 		addi $sp, $sp, 32
-		jr $ra
-		
-	# Time in milliseconds in $a0
-	.globl Sleep
-	Sleep:
-		li $v0, 32
-		syscall
-		jr $ra
+	.end_macro
