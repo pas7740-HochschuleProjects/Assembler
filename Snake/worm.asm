@@ -71,11 +71,27 @@
 			move $a1, $t1
 			CallerSave
 			jal OutOfBounds
-			bne $v0, 1, IncrementHead
-			li $s0, 0
-			lw $ra, 0($sp)
-    			addi $sp, $sp, 4
-			jr $ra
+			beq $v0, 1, EndProgram
+			CallerRestore
+			# If there is worm part
+			CallerSave
+			jal GetDataInWorld
+			beq $v0, 0, EndProgram
+			beq $v0, 1, AddOneToScore
+			j IncrementHead
+			
+			# Worm Error
+			EndProgram:
+				li $s0, 0
+				lw $ra, 0($sp)
+    				addi $sp, $sp, 4
+				jr $ra
+			
+			AddOneToScore:
+				add $s5, $s5, 1
+				Print(scoreText)
+				PrintInt($s5)
+				Print(breakText)
 			
 			IncrementHead:
 			CallerRestore

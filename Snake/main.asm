@@ -3,8 +3,10 @@
 # $s1: World
 # $s2: Worm [(x,y)] # Meanings, -1: Empty, 0: Worm, 1: Food
 # $s3: HeadIndex
-# $s4: Current Key
+# $s4: Current InputKey
+# $s5: Score
 
+.include "io.asm"
 .include "basicOperations.asm"
 
 .data
@@ -17,8 +19,11 @@
 	worm: .space 80
 	wormSize: .word 80	# 8* 10 WormParts
 	
-	world: .space 1024
-	worldSize: .word 1024	# 32*32 Pixel
+	world: .space 4096
+	worldSize: .word 4096	# 32*32*4 Pixel
+	
+	scoreText: .asciiz "Score: "
+	breakText: .asciiz "\n"
 .text
 	Main:
 		# Game

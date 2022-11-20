@@ -6,3 +6,10 @@
     		li $v0, 4
     		syscall
     	.end_macro
+    	
+    	# Print Func needs int address
+    	.macro PrintInt (%int)
+    		move $a0, $s5
+    		li $v0, 1
+    		syscall
+    	.end_macro
