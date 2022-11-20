@@ -1,5 +1,4 @@
 .data
-
 .text
 	# Exit Program
 	.macro Exit

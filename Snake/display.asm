@@ -12,7 +12,7 @@
 		
 		lw $t2, displayAddress
 		
-		jal GetOffset
+		jal GetInScreenOffset
 		add $t0, $v0, $t2
 		sw $a2, 0($t0)
     		
@@ -21,7 +21,7 @@
     		jr $ra
     	
     	# x-Position in $a0, y-Position in $a1, return offset in $v0
-    	GetOffset:
+    	GetInScreenOffset:
     		# Calculate Offset
 		lw $t0, displayWidth
 		lw $t1, unitWidth

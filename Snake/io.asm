@@ -1,3 +1,4 @@
+.data
 .text
     	# Print Func needs charArray address
     	.macro Print (%string)
