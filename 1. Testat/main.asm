@@ -35,7 +35,7 @@
 		j StartComparison
 	EndComparison:
 		jal GetSmallerChar
-		bnez $v0, PrintSecondInputAtFirst
+		bne $v0, 1, PrintSecondInputAtFirst
 	
 	# Print result and exit program
 	PrintFirstInputAtFirst:
@@ -51,13 +51,7 @@
 	
 	# Functions
 	
-	# Compares two chars and outputs 0 if first and 1 if second char is smaller/ GetSmallerChar(a0:=char, a1:=char) => ret v0
+	# Compares two chars and outputs 1 if first and 0 if second char is smaller/ GetSmallerChar(a0:=char, a1:=char) => ret v0
 	GetSmallerChar:
-		slt $a0, $a0, $a1	# a0 < a1
-		beq $a0, 1, FirstIsSmaller
-		SecondIsSmaller:
-			li $v0, 1
-			jr $ra
-		FirstIsSmaller:
-			li $v0, 0
-			jr $ra
+		slt $v0, $a0, $a1	# a0 < a1
+		jr $ra
