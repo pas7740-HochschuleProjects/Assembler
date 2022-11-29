@@ -25,17 +25,42 @@
 	# Compare inputs
 	StartComparison:
 		# Get chars
-		addu $a0, $t0, $s0
-		addu $a1, $t0, $s1
-		lbu $a0, 0($a0)
-		lbu $a1, 0($a1)
+		addu $t1, $t0, $s0
+		addu $t2, $t0, $s1
+		lbu $t1, 0($t1)
+		lbu $t2, 0($t2)
 		# Compare
-		bne $a0, $a1, EndComparison
+		bne $t1, $t2, EndComparison
 		addi $t0, $t0, 1
 		j StartComparison
 	EndComparison:
-		jal GetSmallerChar
-		bne $v0, 1, PrintSecondInputAtFirst
+		# Push stack
+		add $sp, $sp, -8
+		sw $t1, 0($sp)
+		sw $t2, 4($sp)
+		
+		IsFirstCharUpper:
+			lw $a0, 0($sp)
+			jal IsCapitalLetter
+			bne $v0, 2, IsSecondCharUpper
+			jal SetCharLower
+			sw $v0, 0($sp)
+		
+		IsSecondCharUpper:
+			lw $a0, 4($sp)
+			jal IsCapitalLetter
+			bne $v0, 2, CheckLowerOrGreater
+			jal SetCharLower
+			sw $v0, 4($sp)
+			
+		# Pop stack
+		lw $t1, 0($sp)
+		lw $t2, 4($sp)
+		add $sp, $sp, 8
+		
+		CheckLowerOrGreater:
+			slt $t3, $t1, $t2	# t1 < t2
+			bne $t3, 1, PrintSecondInputAtFirst
 	
 	# Print result and exit program
 	PrintFirstInputAtFirst:
@@ -48,10 +73,17 @@
 		PrintString(breakText)
 		PrintString(firstInput)
 		Exit
-	
+		
 	# Functions
 	
-	# Compares two chars and outputs 1 if first and 0 if second char is smaller/ GetSmallerChar(a0:=char, a1:=char) => ret v0
-	GetSmallerChar:
-		slt $v0, $a0, $a1	# a0 < a1
+	# If result is 2, char is uppercase / IsCapitalLetter(a0)=>v0
+	IsCapitalLetter:
+		sgeu $t1, $a0, 'A'	# If char is between A and Z
+		sleu $t2, $a0, 'Z'
+		add $v0, $t1, $t2
+		jr $ra
+	
+	# Returns lower char / SetCharLower(a0)=>v0
+	SetCharLower:
+		addi $v0, $a0, 32
 		jr $ra
