@@ -1,0 +1,2 @@
+http://mipsconverter.com/opcodes.html
+https://www.eg.bucknell.edu/~csci320/mips_web/
