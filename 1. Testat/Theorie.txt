@@ -1,0 +1,9 @@
+Testat 1 / Theorie
+
+1.
+	a.	Die Komponente heißt CPU (core processing unit) und besteht aus Registern, einer ALU (arithmetic logic unit) oder auch Rechenwerk genannt, einem Steuerwerk und einer FPU (floating point unit).
+	b.	CISC (complex instruction set computing) und RISC (reduced instruction set computing)
+	c.	Relative, immediate, direkte, indizierte und indirekte Adressierung
+	d.	Nummer 4
+
+2.	s. Anhang
