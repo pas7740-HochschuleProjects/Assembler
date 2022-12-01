@@ -2,6 +2,7 @@
 	firstInputText: .asciiz "First Word (max. 10 Characters): "
 	secondInputText: .asciiz "Second Word (max. 10 Characters): "
 	breakText: .asciiz "\n"
+	resultText: .asciiz "Result: "
 	firstInput: .space 11
 	secondInput: .space 11
 	inputSize: .word 11
@@ -58,16 +59,14 @@
 		j StartComparison
 	EndComparison:
 		slt $t3, $t1, $t2	# t1 < t2
-		bne $t3, 1, PrintSecondInputAtFirst
+		bne $t3, 1, PrintSecondInput
 	
 	# Print result and exit program
-	PrintFirstInputAtFirst:
+	PrintFirstInput:
+		PrintString(resultText)
 		PrintString(firstInput)
-		PrintString(breakText)
-		PrintString(secondInput)
 		Exit
-	PrintSecondInputAtFirst:
+	PrintSecondInput:
+		PrintString(resultText)
 		PrintString(secondInput)
-		PrintString(breakText)
-		PrintString(firstInput)
 		Exit
